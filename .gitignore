@@ -1,0 +1,15 @@
+
+# my language extension
+*.f
+
+# build out
+out/
+
+# maven out
+target/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
