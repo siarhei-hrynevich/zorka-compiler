@@ -3,11 +3,13 @@ package com.flex.compiler.contextAnalyzer;
 import com.flex.compiler.ast.Expression;
 import com.flex.compiler.ast.concrete.FunctionDeclarationExpression;
 import com.flex.compiler.ast.concrete.VariableDeclarationExpression;
+import com.flex.compiler.ast.concrete.keywords.StructExpression;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
 import com.flex.compiler.parser.ParserUtil;
 import com.flex.compiler.translator.SymbolsTable;
 import com.flex.compiler.translator.symbols.*;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +57,7 @@ public class ContextAnalyzerUtils {
     public static Type findType(String name, SymbolsTable table) {
         Type type = table.findType(name)
                 .orElse(SimpleTypes.findType(name));
-        if(type == null)
+        if (type == null)
             type = new Type(name);
         return type;
     }
@@ -78,6 +80,27 @@ public class ContextAnalyzerUtils {
 
         function.setArgs(analyzeFunctionArgs(expression, table));
         return function;
+    }
+
+    public static Type analyzeStruct(StructExpression expression, SymbolsTable table) {
+        Type type = new Type(expression.getName());
+        type.setDeclared(true);
+        List<Variable> fields = expression.getFields()
+                .stream()
+                .map(varExpr -> ContextAnalyzerUtils.analyzeVariable(varExpr, table))
+                .collect(Collectors.toList());
+        type.setFields(fields);
+
+        for (String modifierName : expression.getModifiers()) {
+            TypeModifier variableModifier = ParserUtil.parseTypeModifier(modifierName);
+            if (variableModifier == null) {
+                AccessModifier modifier = ParserUtil.parseAccessModifier(modifierName);
+                type.setAccessModifier(modifier);
+            } else type.addModifier(variableModifier);
+        }
+
+        expression.setType(type);
+        return type;
     }
 
     public static boolean assertTypes(Type first, Type second) {

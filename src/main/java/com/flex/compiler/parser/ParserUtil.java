@@ -8,6 +8,7 @@ import com.flex.compiler.parser.parsers.ExpressionParser;
 import com.flex.compiler.parser.parsers.keywords.*;
 import com.flex.compiler.translator.symbols.AccessModifier;
 import com.flex.compiler.translator.symbols.FunctionModifier;
+import com.flex.compiler.translator.symbols.TypeModifier;
 import com.flex.compiler.translator.symbols.VariableModifier;
 
 import java.util.ArrayList;
@@ -88,6 +89,10 @@ public class ParserUtil {
 
     public static FunctionModifier parseFunctionModifier(String value) {
         return functionModifiers.get(value);
+    }
+
+    public static TypeModifier parseTypeModifier(String value) {
+        return null;
     }
 
     public static Symbol tryParseSymbol(TokenSequence tokens) {

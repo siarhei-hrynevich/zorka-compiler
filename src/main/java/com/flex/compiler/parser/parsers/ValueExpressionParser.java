@@ -71,7 +71,6 @@ public class ValueExpressionParser implements ExpressionParser {
         ValueExpression index = tryParse(tokens);
         if (tokens.getCurrent().type != TokenType.CloseSquareBracket)
             throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
-        tokens.next();
         return new IndexerExpression(pointer, index);
     }
 
@@ -79,7 +78,6 @@ public class ValueExpressionParser implements ExpressionParser {
         tokens.next();
         if (tokens.getCurrent().type != TokenType.Identifier)
             throw new ParsingException(tokens.getCurrent(), Error.NeedIdentifier);
-        tokens.next();
         return new StructFieldExpression(tokens.getCurrent().value, struct);
     }
 
@@ -90,6 +88,7 @@ public class ValueExpressionParser implements ExpressionParser {
                 || tokens.getCurrent().type == TokenType.Dot) {
             value = tokens.getCurrent().type == TokenType.OpenSquareBracket ?
                     parseIndexer(tokens, value) : parseField(tokens, value);
+            tokens.next();
         }
         return value;
     }

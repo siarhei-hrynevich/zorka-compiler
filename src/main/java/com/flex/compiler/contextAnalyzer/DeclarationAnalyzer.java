@@ -26,6 +26,10 @@ public class DeclarationAnalyzer {
         table.add(ContextAnalyzerUtils.analyzeVariable(expression, table));
     }
 
+    private static void addType(StructExpression expression, SymbolsTable table) throws ContextException {
+        table.add(ContextAnalyzerUtils.analyzeStruct(expression, table));
+    }
+
     private static void addFunction(FunctionDeclarationExpression expression, SymbolsTable table) {
         table.add(ContextAnalyzerUtils.analyzeFunction(expression, table));
     }
@@ -33,24 +37,13 @@ public class DeclarationAnalyzer {
     public static void analyzeTypes(List<Expression> ast, SymbolsTable table) {
         List<StructExpression> types =
                 ContextAnalyzerUtils.filterExpressions(ast, StructExpression.class);
-
-        for (StructExpression e : types) {
-            Type type = new Type(e.getName());
-            type.setDeclared(true);
-            List<Variable> fields =  e.getFields()
-                    .stream()
-                    .map(varExpr -> ContextAnalyzerUtils.analyzeVariable(varExpr, table))
-                    .collect(Collectors.toList());
-            type.setFields(fields);
-            e.setType(type);
-        }
+        types.forEach(e -> addType(e, table));
     }
 
     public static void analyzeFunctions(List<Expression> ast, SymbolsTable table) {
         List<FunctionDeclarationExpression> functions =
                 ContextAnalyzerUtils.filterExpressions(ast, FunctionDeclarationExpression.class);
         functions.forEach(e -> addFunction(e, table));
-
     }
 
     public static void analyzeVars(List<Expression> ast, SymbolsTable table) {
@@ -61,9 +54,14 @@ public class DeclarationAnalyzer {
 
     public static void validateImports(List<Expression> ast, SymbolsTable table) throws Exception {
         List<ImportExpression> imports = ContextAnalyzerUtils.filterExpressions(ast, ImportExpression.class);
-        for (ImportExpression e : imports)
+        for (ImportExpression e : imports) {
             analyzeImport(e, table);
+        }
 
+        validateUndeclaredTypes(ast, table);
+    }
+
+    private static void validateUndeclaredTypes(List<Expression> ast, SymbolsTable table) {
         for (Expression e : ast) {
             if (e instanceof FunctionDeclarationExpression) {
                 validateTypesInFunction(((FunctionDeclarationExpression) e).getFunction(), table);

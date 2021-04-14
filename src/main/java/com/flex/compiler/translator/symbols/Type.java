@@ -3,6 +3,7 @@ package com.flex.compiler.translator.symbols;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
 public class Type extends Symbol {
     private int size;
     private List<Variable> fields;
-    private TypeModifier[] modifiers;
+    private List<TypeModifier> modifiers = new ArrayList<>();
     private final boolean isSimple;
     private String resultName;
 
@@ -67,12 +68,18 @@ public class Type extends Symbol {
         this.fields = fields;
     }
 
-    public TypeModifier[] getModifiers() {
+    public List<TypeModifier> getModifiers() {
         return modifiers;
     }
 
-    public void setModifiers(TypeModifier[] modifiers) {
+    public void setModifiers(List<TypeModifier> modifiers) {
         this.modifiers = modifiers;
+    }
+
+    public void addModifier(TypeModifier modifier) {
+        if (modifier != null) {
+            modifiers.add(modifier);
+        }
     }
 
     public boolean isDeclared() {
@@ -105,14 +112,14 @@ public class Type extends Symbol {
         Type type = (Type) o;
         return size == type.size &&
                 (fields == type.fields || fields.equals(type.fields)) &&
-                Arrays.equals(modifiers, type.modifiers) && arrayDimension == type.arrayDimension;
+                modifiers.equals(type.modifiers) && arrayDimension == type.arrayDimension;
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(super.hashCode(), size);
         result = 31 * result + Objects.hash(fields);
-        result = 31 * result + Arrays.hashCode(modifiers);
+        result = 31 * result + modifiers.hashCode();
         result = 31 * result + arrayDimension;
         return result;
     }
