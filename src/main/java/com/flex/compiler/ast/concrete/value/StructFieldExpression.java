@@ -20,7 +20,10 @@ public class StructFieldExpression extends ValueExpression {
 
     @Override
     public void validate(TranslatorContext context) {
+        struct.validate(context);
 
+        Type structType = struct.getValidType();
+        field = structType.findField(fieldName);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class StructFieldExpression extends ValueExpression {
 
     @Override
     public Type getValidType() {
-        return null;
+        return field.getType();
     }
 
     @Override

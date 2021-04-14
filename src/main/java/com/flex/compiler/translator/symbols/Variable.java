@@ -11,6 +11,12 @@ public class Variable extends Symbol {
 
     public Variable() {}
 
+    public Variable(Variable variable) {
+        this.name = variable.name;
+        this.type = variable.type;
+        this.modifiers = variable.modifiers;
+    }
+
     public Variable(Type type, String name) {
         this.name = name;
         this.type = type;

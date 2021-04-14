@@ -14,5 +14,6 @@ public enum ContextError {
     InvalidArgs,
     InvalidValueType,
     ExpectedReturn,
-    UndeclaredType
+    UndeclaredType,
+    FieldIsNotExist
 }

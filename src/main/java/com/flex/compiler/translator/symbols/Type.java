@@ -104,6 +104,13 @@ public class Type extends Symbol {
         arrayDimension--;
     }
 
+    public Variable findField(String name) {
+        return fields.stream()
+                .filter(f -> f.name.equals(name))
+                .findFirst()
+                .orElseThrow(() -> new ContextException(ContextError.FieldIsNotExist));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
