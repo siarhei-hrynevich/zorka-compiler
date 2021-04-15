@@ -11,7 +11,9 @@ public class StructFieldExpression extends ValueExpression {
     private String fieldName;
     private ValueExpression struct;
 
-    private Variable field;
+    private Type fieldType;
+    private Type structType;
+    private boolean isConst;
 
     public StructFieldExpression(String fieldName, ValueExpression struct) {
         this.fieldName = fieldName;
@@ -22,13 +24,16 @@ public class StructFieldExpression extends ValueExpression {
     public void validate(TranslatorContext context) {
         struct.validate(context);
 
-        Type structType = struct.getValidType();
-        field = structType.findField(fieldName);
+        structType = struct.getValidType();
+        Variable variable = structType.findField(fieldName);
+        fieldType = variable.getType();
+        isConst = variable.isConst();
     }
 
     @Override
     public void translate(Translator translator) {
-
+        struct.translate(translator);
+        translator.pushField(structType, fieldName);
     }
 
     public String getFieldName() {
@@ -39,21 +44,13 @@ public class StructFieldExpression extends ValueExpression {
         return struct;
     }
 
-    public Variable getField() {
-        return field;
-    }
-
-    public void setField(Variable field) {
-        this.field = field;
-    }
-
     @Override
     public Type getValidType() {
-        return field.getType();
+        return fieldType;
     }
 
     @Override
     public boolean canAssign() {
-        return !field.isConst();
+        return !isConst;
     }
 }

@@ -69,6 +69,19 @@ public class TranslatorC implements Translator {
     }
 
     @Override
+    public void pushIndex() {
+        String pointerValue = popValue();
+        String indexValue = popValue();
+        values.add(String.format("%s[%s]", pointerValue, indexValue));
+    }
+
+    @Override
+    public void pushField(Type type, String fieldName) {
+        String struct = popValue();
+        values.add(String.format("%s.%s", struct, fieldName));
+    }
+
+    @Override
     public void operation(Operator operator) {
         String right = popValue();
         String left = popValue();

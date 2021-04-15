@@ -14,6 +14,10 @@ public interface Translator {
 
     void pushFunctionCall(Function function);
 
+    void pushIndex();
+
+    void pushField(Type type, String fieldName);
+
     void operation(Operator operator);
 
     void variableDeclaration(Variable var, boolean needInit);

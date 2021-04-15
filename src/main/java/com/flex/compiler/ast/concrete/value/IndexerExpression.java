@@ -37,7 +37,7 @@ public class IndexerExpression extends ValueExpression {
     public void translate(Translator translator) {
         pointer.translate(translator);
         index.translate(translator);
-
+        translator.pushIndex();
     }
 
     @Override
