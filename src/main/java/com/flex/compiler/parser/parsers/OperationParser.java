@@ -36,6 +36,9 @@ public class OperationParser implements ExpressionParser {
             if (second.type == TokenType.Assignment) {
                 return assignmentParser.tryParse(tokens);
             }
+            if (second.type == TokenType.Identifier) {
+                return declarationParser.tryParse(tokens);
+            }
         }
 
         return valueExpressionParser.tryParse(tokens);
