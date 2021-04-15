@@ -13,27 +13,22 @@ public class SimpleTypes {
     private static final Map<String, Type> simpleTypes = new HashMap<>() {{
         Type integer32 = new Type(4);
         integer32.setName("int32");
-        integer32.setResultName("int");
         put(integer32.getName(), integer32);
 
         Type character = new Type(2);
         character.setName("char");
-        character.setResultName("char");
         put(character.getName(), character);
 
         Type float32 = new Type(4);
         float32.setName("float32");
-        float32.setResultName("float");
         put(float32.getName(), float32);
 
         Type string = new Type(8);
         string.setName("string");
-        string.setResultName("char*");
         put(string.getName(), string);
 
         Type bool = new Type(1);
         bool.setName("bool");
-        bool.setResultName("bool");
         put(bool.getName(), bool);
     }};
 

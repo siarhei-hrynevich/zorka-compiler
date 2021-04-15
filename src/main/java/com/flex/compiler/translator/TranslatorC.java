@@ -93,7 +93,7 @@ public class TranslatorC implements Translator {
         addPaddings(body);
 
         StringBuilder builder = new StringBuilder();
-        builder.append(var.getType().getResultName());
+        builder.append(TranslatorCUtils.getTypeName(var.getType()));
         builder.append(' ');
         builder.append(var.getName());
 
@@ -114,13 +114,13 @@ public class TranslatorC implements Translator {
     @Override
     public void functionDeclaration(Function function) {
         StringBuilder builder = new StringBuilder();
-        builder.append(function.getReturnValue().getResultName());
+        builder.append(TranslatorCUtils.getTypeName(function.getReturnValue()));
         builder.append(' ');
         builder.append(function.getExtendedName());
         builder.append("(");
         List<Variable> args = function.getParams();
         for (int i = 0; i < args.size(); i++) {
-            builder.append(args.get(i).getType().getResultName());
+            builder.append(TranslatorCUtils.getTypeName(args.get(i).getType()));
             builder.append(' ');
             builder.append(args.get(i).getName());
             if (i < args.size() - 1)
@@ -204,7 +204,7 @@ public class TranslatorC implements Translator {
         List<Variable> fields = type.getFields();
         for (int i = 0; i < fields.size(); i++) {
             addPaddings(declarations);
-            declarations.append(fields.get(i).getType().getResultName());
+            declarations.append(TranslatorCUtils.getTypeName(fields.get(i).getType()));
             declarations.append(' ');
             declarations.append(fields.get(i).getName());
             declarations.append(";\n");

@@ -4,7 +4,6 @@ import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +12,6 @@ public class Type extends Symbol {
     private List<Variable> fields;
     private List<TypeModifier> modifiers = new ArrayList<>();
     private final boolean isSimple;
-    private String resultName;
 
     private int arrayDimension = 0;
     private boolean isDeclared;
@@ -22,8 +20,6 @@ public class Type extends Symbol {
         isSimple = false;
         this.name = name;
         isDeclared = isVoid();
-        if (isDeclared)
-            resultName = name;
     }
 
     public Type(int size) {
@@ -33,7 +29,6 @@ public class Type extends Symbol {
     }
 
     public Type(Type type) {
-        this.resultName = type.resultName;
         this.name = type.name;
         this.isDeclared = type.isDeclared;
         this.fields = type.fields;
@@ -129,13 +124,5 @@ public class Type extends Symbol {
         result = 31 * result + modifiers.hashCode();
         result = 31 * result + arrayDimension;
         return result;
-    }
-
-    public String getResultName() {
-        return resultName;
-    }
-
-    public void setResultName(String resultName) {
-        this.resultName = resultName;
     }
 }
