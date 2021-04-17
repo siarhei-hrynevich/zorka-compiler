@@ -15,7 +15,6 @@ public class OperationParser implements ExpressionParser {
 
     private final KeywordParser keywordParser = new KeywordParser();
     private final DeclarationParser declarationParser = new DeclarationParser();
-    private final AssignmentParser assignmentParser = new AssignmentParser();
     private final ValueExpressionParser valueExpressionParser = new ValueExpressionParser();
 
     @Override
@@ -33,8 +32,9 @@ public class OperationParser implements ExpressionParser {
         }
         if (tokens.getCurrent().type == TokenType.Identifier) {
             Token second = tokens.peekNext();
-            if (second.type == TokenType.Assignment) {
-                return assignmentParser.tryParse(tokens);
+            if (second.type == TokenType.OpenSquareBracket) {
+                if (tokens.peekNext(2).type == TokenType.CloseSquareBracket)
+                    return declarationParser.tryParse(tokens);
             }
             if (second.type == TokenType.Identifier) {
                 return declarationParser.tryParse(tokens);

@@ -24,6 +24,10 @@ public class TokenSequence {
     }
 
     public Token peekNext() {
-        return counter + 1 == tokens.size() ? null : tokens.get(counter + 1);
+        return peekNext(1);
+    }
+
+    public Token peekNext(int count) {
+        return counter + count >= tokens.size() ? null : tokens.get(counter + count);
     }
 }

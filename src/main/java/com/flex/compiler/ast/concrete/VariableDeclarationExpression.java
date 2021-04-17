@@ -43,6 +43,7 @@ public class VariableDeclarationExpression extends DeclarationExpression {
         Variable variable = ContextAnalyzerUtils.analyzeVariable(this, context.getTable());
         if (!variable.getType().isDeclared())
             throw new ContextException(ContextError.UndeclaredType);
+        variable.getType().setArrayDimension(dimension);
         if (initializer != null) {
             initializer.validate(context);
             Type initType = initializer.getValidType();

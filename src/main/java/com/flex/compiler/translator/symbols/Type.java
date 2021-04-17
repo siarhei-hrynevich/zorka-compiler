@@ -114,14 +114,13 @@ public class Type extends Symbol {
         Type type = (Type) o;
         return size == type.size &&
                 (fields == type.fields || fields.equals(type.fields)) &&
-                modifiers.equals(type.modifiers) && arrayDimension == type.arrayDimension;
+                arrayDimension == type.arrayDimension;
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(super.hashCode(), size);
         result = 31 * result + Objects.hash(fields);
-        result = 31 * result + modifiers.hashCode();
         result = 31 * result + arrayDimension;
         return result;
     }

@@ -15,24 +15,36 @@ import java.util.List;
 
 public class DeclarationParser implements ExpressionParser {
 
+    private int parsePointersCount(TokenSequence tokens) {
+        int count = 0;
+        while (tokens.getCurrent().type == TokenType.OpenSquareBracket) {
+            if (tokens.next().type != TokenType.CloseSquareBracket)
+                throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
+            tokens.next();
+            count++;
+        }
+        return count;
+    }
 
     private VariableDeclarationExpression parseVariableDeclaration(TokenSequence tokens) throws Exception {
         Token token = tokens.getCurrent();
         String type = token.value;
         if (ParserUtil.isType(token)) {
             token = tokens.next();
-            if (token.type == TokenType.Identifier) {
-                VariableDeclarationExpression var = new VariableDeclarationExpression(type, token.value, null);
-                if (tokens.next().type == TokenType.Assignment) {
-                    tokens.next();
-                    ValueExpression initialization = new ValueExpressionParser().tryParse(tokens);
-                    var.setInitializer(initialization);
-                }
+            int pointersCount = parsePointersCount(tokens);
 
-                return var;
-            } else {
+            if (token.type != TokenType.Identifier) {
                 throw new Exception("Expected: Identifier");
             }
+            VariableDeclarationExpression var = new VariableDeclarationExpression(type, token.value, null);
+            var.setDimension(pointersCount);
+            if (tokens.next().type == TokenType.Assignment) {
+                tokens.next();
+                ValueExpression initialization = new ValueExpressionParser().tryParse(tokens);
+                var.setInitializer(initialization);
+            }
+
+            return var;
         }
         throw new Exception("Expected: Type name");
     }

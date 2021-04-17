@@ -67,8 +67,15 @@ public class DeclarationAnalyzer {
                 validateTypesInFunction(((FunctionDeclarationExpression) e).getFunction(), table);
             } else if (e instanceof VariableDeclarationExpression) {
                 validateTypeOfVariable(((VariableDeclarationExpression) e).getVariable(), table);
+            } else if (e instanceof StructExpression) {
+                validateStruct((StructExpression) e, table);
             }
         }
+    }
+
+    private static void validateStruct(StructExpression e, SymbolsTable table) {
+         e.setType(getValidType(e.getType(), table));
+         e.getType().getFields().forEach(var -> validateTypeOfVariable(var, table));
     }
 
     private static void validateTypesInFunction(Function func, SymbolsTable table) {
