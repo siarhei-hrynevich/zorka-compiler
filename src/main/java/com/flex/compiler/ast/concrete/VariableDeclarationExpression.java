@@ -40,10 +40,9 @@ public class VariableDeclarationExpression extends DeclarationExpression {
 
     @Override
     public void validate(TranslatorContext context) {
-        Variable variable = ContextAnalyzerUtils.analyzeVariable(this, context.getTable());
+        variable = ContextAnalyzerUtils.analyzeVariable(this, context.getTable());
         if (!variable.getType().isDeclared())
             throw new ContextException(ContextError.UndeclaredType);
-        variable.getType().setArrayDimension(dimension);
         if (initializer != null) {
             initializer.validate(context);
             Type initType = initializer.getValidType();

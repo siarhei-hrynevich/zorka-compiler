@@ -31,6 +31,7 @@ public class ContextAnalyzerUtils {
         variable.setType(type);
         expression.setVariable(variable);
         List<String> modifiers = expression.getModifiers();
+        variable.getType().setArrayDimension(expression.getDimension());
         if (modifiers == null)
             return variable;
         for (String modifierName : modifiers) {
@@ -40,7 +41,6 @@ public class ContextAnalyzerUtils {
                 variable.setAccessModifier(modifier);
             } else variable.addModifier(variableModifier);
         }
-        variable.getType().setArrayDimension(expression.getDimension());
         return variable;
     }
 
@@ -58,8 +58,8 @@ public class ContextAnalyzerUtils {
         Type type = table.findType(name)
                 .orElse(SimpleTypes.findType(name));
         if (type == null)
-            type = new Type(name);
-        return type;
+            return new Type(name);
+        return new Type(type);
     }
 
     public static Function analyzeFunction(FunctionDeclarationExpression expression, SymbolsTable table) throws ContextException {
