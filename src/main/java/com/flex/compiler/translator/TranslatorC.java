@@ -94,6 +94,7 @@ public class TranslatorC implements Translator {
 
         StringBuilder builder = new StringBuilder();
         builder.append(TranslatorCUtils.getTypeName(var.getType()));
+        builder.append("*".repeat(var.getType().getArrayDimension()));
         builder.append(' ');
         builder.append(var.getName());
 
