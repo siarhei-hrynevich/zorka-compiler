@@ -30,9 +30,9 @@ public class DeclarationParser implements ExpressionParser {
         Token token = tokens.getCurrent();
         String type = token.value;
         if (ParserUtil.isType(token)) {
-            token = tokens.next();
+            tokens.next();
             int pointersCount = parsePointersCount(tokens);
-
+            token = tokens.getCurrent();
             if (token.type != TokenType.Identifier) {
                 throw new Exception("Expected: Identifier");
             }

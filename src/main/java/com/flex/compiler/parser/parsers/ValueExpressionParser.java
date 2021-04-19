@@ -6,12 +6,15 @@ import com.flex.compiler.parser.ParserUtil;
 import com.flex.compiler.parser.Symbol;
 import com.flex.compiler.parser.exception.Error;
 import com.flex.compiler.parser.exception.ParsingException;
+import com.flex.compiler.parser.parsers.keywords.ArrayInstantiationParser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class ValueExpressionParser implements ExpressionParser {
+
+    private static final ArrayInstantiationParser INSTANTIATION_PARSER = new ArrayInstantiationParser();
 
     private List<ValueExpression> parseArgs(TokenSequence tokens) throws Exception {
         List<ValueExpression> args = new ArrayList<>();
@@ -83,6 +86,9 @@ public class ValueExpressionParser implements ExpressionParser {
 
     // const, var, function call, indexer, field
     private ValueExpression parseValue(TokenSequence tokens) throws Exception {
+        if (INSTANTIATION_PARSER.canParse(tokens))
+            return INSTANTIATION_PARSER.tryParse(tokens);
+
         ValueExpression value = parseSymbol(tokens);
         while (tokens.getCurrent().type == TokenType.OpenSquareBracket
                 || tokens.getCurrent().type == TokenType.Dot) {

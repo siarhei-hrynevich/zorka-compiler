@@ -48,7 +48,9 @@ public class Type extends Symbol {
     }
 
     public int getSize() {
-        return size;
+        if (isSimple)
+            return size;
+        return fields.stream().mapToInt(f -> f.getType().getSize()).sum();
     }
 
     public void setSize(int size) {
@@ -99,6 +101,10 @@ public class Type extends Symbol {
         arrayDimension--;
     }
 
+    public void incrementDimension() {
+        arrayDimension++;
+    }
+
     public Variable findField(String name) {
         return fields.stream()
                 .filter(f -> f.name.equals(name))
@@ -112,9 +118,9 @@ public class Type extends Symbol {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Type type = (Type) o;
-        return size == type.size &&
-                (fields == type.fields || fields.equals(type.fields)) &&
-                arrayDimension == type.arrayDimension;
+        return (isSimple && size == type.size) ||
+                ((fields == type.fields || fields.equals(type.fields)) &&
+                arrayDimension == type.arrayDimension);
     }
 
     @Override
