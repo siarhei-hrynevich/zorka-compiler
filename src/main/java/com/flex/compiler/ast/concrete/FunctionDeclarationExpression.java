@@ -9,29 +9,30 @@ import java.util.List;
 
 public class FunctionDeclarationExpression extends DeclarationExpression {
 
-    private String type;
+    private String typeName;
+    private int returnValueArrayDimension;
     private String name;
     private List<VariableDeclarationExpression> args;
     private BlockExpression implementation;
     private Function function;
 
 
-    public FunctionDeclarationExpression(String type, String name, List<VariableDeclarationExpression> args) {
-        this.type = type;
+    public FunctionDeclarationExpression(String typeName, String name, List<VariableDeclarationExpression> args) {
+        this.typeName = typeName;
         this.name = name;
         this.args = args;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeName() {
+        return typeName;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public List<VariableDeclarationExpression> getArgs() {
@@ -79,5 +80,13 @@ public class FunctionDeclarationExpression extends DeclarationExpression {
         translator.functionDeclaration(function);
         if (implementation != null)
             implementation.translate(translator);
+    }
+
+    public int getReturnValueArrayDimension() {
+        return returnValueArrayDimension;
+    }
+
+    public void setReturnValueArrayDimension(int returnValueArrayDimension) {
+        this.returnValueArrayDimension = returnValueArrayDimension;
     }
 }

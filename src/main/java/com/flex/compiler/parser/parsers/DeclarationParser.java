@@ -64,7 +64,7 @@ public class DeclarationParser implements ExpressionParser {
         return function;
     }
 
-    private DeclarationExpression parseFunction(String type, String name, TokenSequence tokens) throws Exception {
+    private FunctionDeclarationExpression parseFunction(String type, String name, TokenSequence tokens) throws Exception {
         FunctionDeclarationExpression declaration = parseFunctionDeclaration(type, name, tokens);
         if (tokens.getCurrent().type == TokenType.OperationSplitter) {
             tokens.next();
@@ -109,7 +109,9 @@ public class DeclarationParser implements ExpressionParser {
         token = tokens.next();
 
         if (token.type == TokenType.OpenBracket) {
-            return parseFunction(type, name, tokens);
+            FunctionDeclarationExpression function = parseFunction(type, name, tokens);
+            function.setReturnValueArrayDimension(dimensionCount);
+            return function;
         } else {
             VariableDeclarationExpression var = createVariable(type, name);
             if (token.type == TokenType.Assignment) {

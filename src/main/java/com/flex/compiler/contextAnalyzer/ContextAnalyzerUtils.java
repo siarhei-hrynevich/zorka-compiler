@@ -9,11 +9,8 @@ import com.flex.compiler.parser.ParserUtil;
 import com.flex.compiler.translator.SymbolsTable;
 import com.flex.compiler.translator.symbols.*;
 
-import java.sql.Struct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ContextAnalyzerUtils {
@@ -66,7 +63,8 @@ public class ContextAnalyzerUtils {
         Function function = new Function();
         expression.setFunction(function);
         function.setName(expression.getName());
-        Type type = findType(expression.getType(), table);
+        Type type = findType(expression.getTypeName(), table);
+        type.setArrayDimension(expression.getReturnValueArrayDimension());
         function.setReturnValue(type);
 
         List<String> modifiers = expression.getModifiers();

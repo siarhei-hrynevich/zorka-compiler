@@ -87,9 +87,11 @@ public class DeclarationAnalyzer {
 
     private static Type getValidType(Type type, SymbolsTable table) {
         if (!type.isDeclared()) {
+            int arrayDimension = type.getArrayDimension();
             type = ContextAnalyzerUtils.findType(type.getName(), table);
             if (!type.isDeclared())
                 throw new ContextException(ContextError.UndeclaredType);
+            type.setArrayDimension(arrayDimension);
         }
         return type;
     }
