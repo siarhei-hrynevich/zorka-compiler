@@ -101,9 +101,7 @@ public class TranslatorC implements Translator {
         addPaddings(body);
 
         StringBuilder builder = new StringBuilder();
-        builder.append(TranslatorCUtils.getTypeName(var.getType()));
-        builder.append("*".repeat(var.getType().getArrayDimension()));
-        builder.append(' ');
+        translateType(var.getType(), builder);
         builder.append(var.getName());
 
         if (needInit) {
@@ -123,14 +121,12 @@ public class TranslatorC implements Translator {
     @Override
     public void functionDeclaration(Function function) {
         StringBuilder builder = new StringBuilder();
-        builder.append(TranslatorCUtils.getTypeName(function.getReturnValue()));
-        builder.append(' ');
+        translateType(function.getReturnValue(), builder);
         builder.append(function.getExtendedName());
         builder.append("(");
         List<Variable> args = function.getParams();
         for (int i = 0; i < args.size(); i++) {
-            builder.append(TranslatorCUtils.getTypeName(args.get(i).getType()));
-            builder.append(' ');
+            translateType(args.get(i).getType(), builder);
             builder.append(args.get(i).getName());
             if (i < args.size() - 1)
                 builder.append(", ");
@@ -213,13 +209,12 @@ public class TranslatorC implements Translator {
         List<Variable> fields = type.getFields();
         for (int i = 0; i < fields.size(); i++) {
             addPaddings(declarations);
-            declarations.append(TranslatorCUtils.getTypeName(fields.get(i).getType()));
-            declarations.append(' ');
+            translateType(fields.get(i).getType(), declarations);
             declarations.append(fields.get(i).getName());
             declarations.append(";\n");
         }
         scopesCount--;
-        declarations.append("}\n");
+        declarations.append("};\n");
     }
 
     @Override
@@ -257,9 +252,16 @@ public class TranslatorC implements Translator {
             }
         }
         try (FileWriter writer = new FileWriter(headerFile)) {
+            String define = headerPath.replace(File.separatorChar, '_').replace('.', '_');
+
+            writer.write("#ifndef ");
+            writer.write(define);
+            writer.write("\n#define ");
+            writer.write(define);
+            writer.write('\n');
             writer.write(includes.toString());
             writer.write(declarations.toString());
-
+            writer.write("#endif");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -274,5 +276,13 @@ public class TranslatorC implements Translator {
 
     private void addPaddings(StringBuilder builder) {
         builder.append("\t".repeat(Math.max(0, scopesCount)));
+    }
+
+    private void translateType(Type type, StringBuilder builder) {
+        if (!type.isSimple())
+            builder.append("struct ");
+        builder.append(TranslatorCUtils.getTypeName(type));
+        builder.append("*".repeat(type.getArrayDimension()));
+        builder.append(' ');
     }
 }
