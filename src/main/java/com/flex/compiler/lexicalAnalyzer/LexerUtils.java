@@ -21,7 +21,7 @@ public class LexerUtils {
     }};
 
     private static Map<Operator, Integer> operatorsPriority = new HashMap<>() {{
-        put(Operator.Assignment, 5);
+        put(Operator.Assignment, 1);
         put(Operator.PlusAssignment, 1);
         put(Operator.MinusAssignment, 1);
         put(Operator.MulAssignment, 5);
