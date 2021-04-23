@@ -7,6 +7,8 @@ import com.flex.compiler.parser.Symbol;
 import com.flex.compiler.parser.exception.Error;
 import com.flex.compiler.parser.exception.ParsingException;
 import com.flex.compiler.parser.parsers.keywords.ArrayInstantiationParser;
+import com.flex.compiler.parser.parsers.keywords.KeywordValueParser;
+import com.flex.compiler.parser.parsers.keywords.SizeOfArrayParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,10 @@ import java.util.Stack;
 
 public class ValueExpressionParser implements ExpressionParser {
 
-    private static final ArrayInstantiationParser INSTANTIATION_PARSER = new ArrayInstantiationParser();
+    private static final List<KeywordValueParser> KEYWORD_PARSERS = new ArrayList<>() {{
+        add(new ArrayInstantiationParser());
+        add(new SizeOfArrayParser());
+    }};
 
     private List<ValueExpression> parseArgs(TokenSequence tokens) throws Exception {
         List<ValueExpression> args = new ArrayList<>();
@@ -84,12 +89,20 @@ public class ValueExpressionParser implements ExpressionParser {
         return new StructFieldExpression(tokens.getCurrent().value, struct);
     }
 
+    ValueExpression parseKeywordOrSymbol(TokenSequence tokens) throws Exception {
+        KeywordValueParser parser = KEYWORD_PARSERS.stream()
+                .filter(p -> p.canParse(tokens))
+                .findFirst()
+                .orElse(null);
+        if (parser == null)
+            return parseSymbol(tokens);
+        return parser.tryParse(tokens);
+    }
+
     // const, var, function call, indexer, field
     private ValueExpression parseValue(TokenSequence tokens) throws Exception {
-        if (INSTANTIATION_PARSER.canParse(tokens))
-            return INSTANTIATION_PARSER.tryParse(tokens);
+        ValueExpression value = parseKeywordOrSymbol(tokens);
 
-        ValueExpression value = parseSymbol(tokens);
         while (tokens.getCurrent().type == TokenType.OpenSquareBracket
                 || tokens.getCurrent().type == TokenType.Dot) {
             value = tokens.getCurrent().type == TokenType.OpenSquareBracket ?

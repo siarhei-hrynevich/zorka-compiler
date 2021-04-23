@@ -10,9 +10,10 @@ import com.flex.compiler.parser.exception.ParsingException;
 import com.flex.compiler.parser.parsers.ExpressionParser;
 import com.flex.compiler.parser.parsers.ValueExpressionParser;
 
-public class ArrayInstantiationParser implements ExpressionParser {
+public class ArrayInstantiationParser implements KeywordValueParser {
     private static final ValueExpressionParser VALUE_PARSER = new ValueExpressionParser();
 
+    @Override
     public boolean canParse(TokenSequence tokens) {
         return tokens.getCurrent().value.equals("array");
     }
