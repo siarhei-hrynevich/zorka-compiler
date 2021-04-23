@@ -74,13 +74,19 @@ public class TranslatorC implements Translator {
     public void pushIndex() {
         String pointerValue = popValue();
         String indexValue = popValue();
-        values.add(String.format("(%s + 4)[%s]", pointerValue, indexValue));
+        values.add(String.format("%s[%s]", pointerValue, indexValue));
     }
 
     @Override
     public void pushArrayInstantiation(Type arrayType) {
         String arraySize = popValue();
         values.add(String.format("create_array(%s, %s)", arraySize, arrayType.getSize()));
+    }
+
+    @Override
+    public void pushSizeOfArray() {
+        String array = popValue();
+        values.add(String.format("*((int*)%s - 1)", array));
     }
 
     @Override

@@ -18,6 +18,8 @@ public interface Translator {
 
     void pushArrayInstantiation(Type arrayType);
 
+    void pushSizeOfArray();
+
     void pushField(Type type, String fieldName);
 
     void operation(Operator operator);
