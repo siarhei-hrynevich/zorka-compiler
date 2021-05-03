@@ -46,6 +46,7 @@ public class ContextAnalyzerUtils {
         for (VariableDeclarationExpression e : expression.getArgs()) {
             Type type = findType(e.getType(), table);
             Variable variable = new Variable(type, e.getName());
+            variable.getType().setArrayDimension(e.getDimension());
             args.add(variable);
         }
         return args;

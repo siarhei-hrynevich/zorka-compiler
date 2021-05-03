@@ -17,8 +17,8 @@ public class Type extends Symbol {
     private boolean isDeclared;
 
     public Type(String name) {
-        isSimple = false;
         this.name = name;
+        isSimple = isVoid();
         isDeclared = isVoid();
     }
 

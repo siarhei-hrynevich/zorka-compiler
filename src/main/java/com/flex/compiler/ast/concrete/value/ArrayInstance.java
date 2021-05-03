@@ -21,9 +21,9 @@ public class ArrayInstance extends ValueExpression {
     public void validate(TranslatorContext context) {
         size.validate(context);
 
-        type = context.getTable()
+        type = new Type(context.getTable()
                 .findType(typeName)
-                .orElseThrow(() -> new ContextException(ContextError.UndeclaredType));
+                .orElseThrow(() -> new ContextException(ContextError.UndeclaredType)));
         type.incrementDimension();
     }
 
