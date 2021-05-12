@@ -95,9 +95,9 @@ public class Type extends Symbol {
         this.arrayDimension = arrayDimension;
     }
 
-    public void decrementDimension() {
+    public void decrementDimension() throws Exception {
         if (arrayDimension == 0)
-            throw new ContextException(ContextError.InvalidValueType);
+            throw new Exception();
         arrayDimension--;
     }
 
@@ -109,7 +109,7 @@ public class Type extends Symbol {
         return fields.stream()
                 .filter(f -> f.name.equals(name))
                 .findFirst()
-                .orElseThrow(() -> new ContextException(ContextError.FieldIsNotExist));
+                .orElse(null);
     }
 
     @Override
@@ -129,5 +129,10 @@ public class Type extends Symbol {
         result = 31 * result + Objects.hash(fields);
         result = 31 * result + arrayDimension;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return name + "[]".repeat(arrayDimension);
     }
 }

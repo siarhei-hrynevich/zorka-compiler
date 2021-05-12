@@ -24,6 +24,7 @@ public class ParserUtil {
         put("while", new WhileParser());
         put("import", new ImportExpressionParser());
         put("struct", new StructExpressionParser());
+        put("delete", new DeleteExpressionParser());
     }};
 
     private static final Map<String, AccessModifier> accessModifiers = new HashMap<>() {{
@@ -33,7 +34,6 @@ public class ParserUtil {
 
     private static final Map<String, VariableModifier> variableModifiers = new HashMap<>() {{
         put("const", VariableModifier.Const);
-        put("pointer", VariableModifier.Pointer);
     }};
 
     private static final Map<String, FunctionModifier> functionModifiers = new HashMap<>() {{

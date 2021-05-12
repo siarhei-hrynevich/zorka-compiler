@@ -32,11 +32,10 @@ public class DeclarationParser implements ExpressionParser {
         if (ParserUtil.isType(token)) {
             tokens.next();
             int pointersCount = parsePointersCount(tokens);
-            token = tokens.getCurrent();
-            if (token.type != TokenType.Identifier) {
+            if (tokens.getCurrent().type != TokenType.Identifier) {
                 throw new Exception("Expected: Identifier");
             }
-            VariableDeclarationExpression var = new VariableDeclarationExpression(type, token.value, null);
+            VariableDeclarationExpression var = new VariableDeclarationExpression(token, type, tokens.getCurrent().value, null);
             var.setDimension(pointersCount);
             if (tokens.next().type == TokenType.Assignment) {
                 tokens.next();
@@ -50,7 +49,7 @@ public class DeclarationParser implements ExpressionParser {
     }
 
     private FunctionDeclarationExpression parseFunctionDeclaration(String type, String name, TokenSequence tokens) throws Exception {
-        FunctionDeclarationExpression function;
+        Token token = tokens.getCurrent();
 
         List<VariableDeclarationExpression> args = new ArrayList<>();
         tokens.next();
@@ -60,8 +59,7 @@ public class DeclarationParser implements ExpressionParser {
                 tokens.next();
         }
         tokens.next();
-        function = new FunctionDeclarationExpression(type, name, args);
-        return function;
+        return  new FunctionDeclarationExpression(token, type, name, args);
     }
 
     private FunctionDeclarationExpression parseFunction(String type, String name, TokenSequence tokens) throws Exception {
@@ -76,8 +74,8 @@ public class DeclarationParser implements ExpressionParser {
         return declaration;
     }
 
-    private VariableDeclarationExpression createVariable(String type, String name) throws Exception {
-        return new VariableDeclarationExpression(type, name, null);
+    private VariableDeclarationExpression createVariable(String type, String name, TokenSequence tokens) {
+        return new VariableDeclarationExpression(tokens.getCurrent(), type, name, null);
     }
 
     private int parseDimensionCount(TokenSequence tokens) {
@@ -113,8 +111,10 @@ public class DeclarationParser implements ExpressionParser {
             function.setReturnValueArrayDimension(dimensionCount);
             return function;
         } else {
-            VariableDeclarationExpression var = createVariable(type, name);
+            VariableDeclarationExpression var = createVariable(type, name, tokens);
             if (token.type == TokenType.Assignment) {
+                if (!token.value.equals("="))
+                    throw new ParsingException(token, Error.ExpectedAssignment);
                 tokens.next();
                 var.setInitializer(new ValueExpressionParser().tryParse(tokens));
             }

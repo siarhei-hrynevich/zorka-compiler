@@ -4,6 +4,7 @@ import com.flex.compiler.ast.concrete.DeclarationExpression;
 import com.flex.compiler.ast.concrete.VariableDeclarationExpression;
 import com.flex.compiler.ast.concrete.keywords.StructExpression;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.lexicalAnalyzer.TokenSequence;
 import com.flex.compiler.ast.Expression;
 import com.flex.compiler.lexicalAnalyzer.TokenType;
@@ -20,6 +21,7 @@ public class StructExpressionParser implements ExpressionParser {
 
     @Override
     public StructExpression tryParse(TokenSequence tokens) throws Exception {
+        Token token = tokens.getCurrent();
         List<VariableDeclarationExpression> fields = new ArrayList<>();
         if (tokens.next().type != TokenType.Identifier)
             throw new ParsingException(tokens.getCurrent(), Error.NeedIdentifier);
@@ -33,8 +35,10 @@ public class StructExpressionParser implements ExpressionParser {
                 fields.add((VariableDeclarationExpression) var);
             else
                 throw new ParsingException(tokens.getCurrent(), Error.ExpectedVariable);
+            if (tokens.getCurrent().type == TokenType.Comma)
+                tokens.next();
         }
         tokens.next();
-        return new StructExpression(fields, name);
+        return new StructExpression(token, fields, name);
     }
 }

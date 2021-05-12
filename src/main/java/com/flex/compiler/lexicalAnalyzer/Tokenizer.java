@@ -1,6 +1,8 @@
 package com.flex.compiler.lexicalAnalyzer;
 
 import com.flex.compiler.parser.ParserUtil;
+import com.flex.compiler.parser.exception.Error;
+import com.flex.compiler.parser.exception.ParsingException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,7 +19,8 @@ public class Tokenizer {
         add("\".*\"");
         add("\\.");
         add("(\\+||-){0,1}\\d+\\.{0,1}\\d+");
-        add("((\\w+)(\\d)*(\\w)*)");
+        add("\\w+");
+        //add("[A-Za-z]\\w*");
         add("\\{");
         add("\\}");
         add("\\(");
@@ -32,12 +35,12 @@ public class Tokenizer {
         add("\\*=");
         add("\\*");
         add(";");
-        add("<=");
-        add("<=");
         add("<");
         add(">");
         add("/=");
         add("/");
+        add("\\!=");
+        add("==");
         add("=");
     }};
 
@@ -71,6 +74,8 @@ public class Tokenizer {
                 if(isComment(token.value))
                     continue;
                 token.type = determineType(token.value);
+                if (token.type == TokenType.Identifier && Character.isDigit(token.value.charAt(0)))
+                    throw new ParsingException(token, Error.NeedIdentifier);
                 tokens.add(token);
             }
         }
@@ -95,10 +100,10 @@ public class Tokenizer {
             case ")" -> TokenType.CloseBracket;
             case "{" -> TokenType.BeginBlock;
             case "}" -> TokenType.EndBlock;
-            case "=" -> TokenType.Assignment;
+            case "=", "+=", "-=", "*=", "/=" -> TokenType.Assignment;
             case "[" -> TokenType.OpenSquareBracket;
             case "]" -> TokenType.CloseSquareBracket;
-            case "+", "-", "*", "/", "<", ">" -> TokenType.BinaryOperation;
+            case "+", "-", "*", "/", "<", ">", "!=", "==" -> TokenType.BinaryOperation;
             case "," -> TokenType.Comma;
             case ";" -> TokenType.OperationSplitter;
             case "." -> TokenType.Dot;

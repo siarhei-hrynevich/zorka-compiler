@@ -1,17 +1,19 @@
 package com.flex.compiler.ast.concrete.keywords;
 
 import com.flex.compiler.ast.Expression;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.utils.FileUtils;
 
 import java.util.List;
 
-public class ImportExpression implements Expression {
+public class ImportExpression extends Expression {
     private List<String> path;
     private String symbol;
 
-    public ImportExpression(List<String> path, String symbol) {
+    public ImportExpression(Token token, List<String> path, String symbol) {
+        super(token);
         this.path = path;
         this.symbol = symbol;
     }

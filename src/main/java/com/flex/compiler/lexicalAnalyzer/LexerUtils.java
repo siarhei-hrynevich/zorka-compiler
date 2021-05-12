@@ -18,6 +18,7 @@ public class LexerUtils {
         put("<", Operator.Less);
         put(">", Operator.More);
         put("==", Operator.Equal);
+        put("!=", Operator.NotEqual);
     }};
 
     private static Map<Operator, Integer> operatorsPriority = new HashMap<>() {{

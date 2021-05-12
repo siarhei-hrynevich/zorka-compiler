@@ -25,12 +25,12 @@ public class AssignmentParser implements ExpressionParser {
 //            if (tokens.next().type != TokenType.Dot)
 //
 //        }
-        ValueExpression left = new VariableExpression(ParserUtil.tryParseSymbol(tokens));
+        //ValueExpression left = new VariableExpression(ParserUtil.tryParseSymbol(tokens));
         Token token = tokens.next();
         if (token.type == TokenType.Assignment) {
             tokens.next();
             ValueExpression right = new ValueExpressionParser().tryParse(tokens);
-            return new BinaryOperation(token.value, left, right);
+            return null;//new BinaryOperation(token.value, left, right);
         } else {
             throw new Exception("Expected: operation");
         }

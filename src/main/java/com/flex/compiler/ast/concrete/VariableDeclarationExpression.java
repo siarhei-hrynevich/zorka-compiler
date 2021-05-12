@@ -4,6 +4,7 @@ import com.flex.compiler.ast.concrete.value.ValueExpression;
 import com.flex.compiler.contextAnalyzer.ContextAnalyzerUtils;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
@@ -28,7 +29,8 @@ public class VariableDeclarationExpression extends DeclarationExpression {
         return name;
     }
 
-    public VariableDeclarationExpression(String type, String name, ValueExpression initializer) {
+    public VariableDeclarationExpression(Token token, String type, String name, ValueExpression initializer) {
+        super(token);
         this.type = type;
         this.name = name;
         this.initializer = initializer;
@@ -42,12 +44,14 @@ public class VariableDeclarationExpression extends DeclarationExpression {
     public void validate(TranslatorContext context) {
         variable = ContextAnalyzerUtils.analyzeVariable(this, context.getTable());
         if (!variable.getType().isDeclared())
-            throw new ContextException(ContextError.UndeclaredType);
+            throw new ContextException(this.token, ContextError.UndeclaredType, variable.getType().getName());
         if (initializer != null) {
             initializer.validate(context);
             Type initType = initializer.getValidType();
             if (!ContextAnalyzerUtils.assertTypes(variable.getType(), initType))
-                throw new ContextException(ContextError.InvalidRightValue);
+                throw new ContextException(this.token, ContextError.InvalidRightValue,
+                        variable.getType().getName(),
+                        initType.getName());
         }
         context.getCurrentScope().addVariable(variable);
     }

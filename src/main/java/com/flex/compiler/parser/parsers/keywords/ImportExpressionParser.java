@@ -1,6 +1,7 @@
 package com.flex.compiler.parser.parsers.keywords;
 
 import com.flex.compiler.ast.concrete.keywords.ImportExpression;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.lexicalAnalyzer.TokenSequence;
 import com.flex.compiler.ast.Expression;
 import com.flex.compiler.lexicalAnalyzer.TokenType;
@@ -15,6 +16,7 @@ public class ImportExpressionParser implements ExpressionParser {
 
     @Override
     public Expression tryParse(TokenSequence tokens) throws Exception {
+        Token token = tokens.getCurrent();
         List<String> path = new ArrayList<>();
         String symbol;
 
@@ -36,6 +38,6 @@ public class ImportExpressionParser implements ExpressionParser {
         symbol = path.get(path.size() - 1);
         path.remove(path.size() - 1);
 
-        return new ImportExpression(path, symbol);
+        return new ImportExpression(token, path, symbol);
     }
 }

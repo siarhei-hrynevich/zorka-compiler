@@ -5,11 +5,13 @@ import com.flex.compiler.ast.concrete.value.ValueExpression;
 import com.flex.compiler.contextAnalyzer.ContextAnalyzerUtils;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 
-public class ReturnExpression implements Expression {
-    public ReturnExpression(ValueExpression value) {
+public class ReturnExpression extends Expression {
+    public ReturnExpression(Token token, ValueExpression value) {
+        super(token);
         this.value = value;
     }
 
@@ -26,7 +28,7 @@ public class ReturnExpression implements Expression {
     @Override
     public void validate(TranslatorContext context) {
         if (context.getCurrentScope().getReturnValue().isVoid() && value != null)
-            throw new ContextException(ContextError.UnexpectedExpression);
+            throw new ContextException(this.token, ContextError.UnexpectedExpression);
         if (!context.getCurrentScope().getReturnValue().isVoid()) {
             value.validate(context);
             ContextAnalyzerUtils.assertTypes(value.getValidType(), context.getCurrentScope().getReturnValue());

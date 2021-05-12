@@ -3,6 +3,7 @@ package com.flex.compiler.ast.concrete.value;
 import com.flex.compiler.contextAnalyzer.SimpleTypes;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
@@ -47,8 +48,9 @@ public class ConstExpression extends ValueExpression {
         isInt = anInt;
     }
 
-    public ConstExpression(String value) {
-        this.value = value;
+    public ConstExpression(Token token) {
+        super(token);
+        this.value = token.value;
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ConstExpression extends ValueExpression {
             return SimpleTypes.getFloat32Type();
         if (isInt)
             return SimpleTypes.getInt32Type();
-        throw new ContextException(ContextError.UnexpectedExpression);
+        throw new ContextException(this.token, ContextError.UnexpectedExpression);
     }
 
     @Override

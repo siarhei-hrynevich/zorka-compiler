@@ -2,20 +2,22 @@ package com.flex.compiler.ast.concrete.keywords;
 
 import com.flex.compiler.ast.Expression;
 import com.flex.compiler.ast.concrete.VariableDeclarationExpression;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
 
 import java.util.List;
 
-public class StructExpression implements Expression {
+public class StructExpression extends Expression {
 
     private List<VariableDeclarationExpression> fields;
     private String name;
     private Type type;
     private List<String> modifiers;
 
-    public StructExpression(List<VariableDeclarationExpression> fields, String name) {
+    public StructExpression(Token token, List<VariableDeclarationExpression> fields, String name) {
+        super(token);
         this.fields = fields;
         this.name = name;
     }

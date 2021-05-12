@@ -1,5 +1,6 @@
 package com.flex.compiler.parser.parsers.keywords;
 
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.lexicalAnalyzer.TokenType;
 import com.flex.compiler.lexicalAnalyzer.TokenSequence;
 import com.flex.compiler.ast.Expression;
@@ -11,10 +12,11 @@ import com.flex.compiler.parser.parsers.ValueExpressionParser;
 public class ReturnExpressionParser implements ExpressionParser {
     @Override
     public Expression tryParse(TokenSequence tokens) throws Exception {
+        Token token = tokens.getCurrent();
         tokens.next();
         ValueExpression expression = new ValueExpressionParser().tryParse(tokens);
         if (tokens.getCurrent().type == TokenType.OperationSplitter)
             tokens.next();
-        return new ReturnExpression(expression);
+        return new ReturnExpression(token, expression);
     }
 }

@@ -47,4 +47,6 @@ public interface Translator {
     void struct(Type type);
 
     void translate();
+
+    void delete();
 }

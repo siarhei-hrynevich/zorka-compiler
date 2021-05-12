@@ -1,13 +1,15 @@
 package com.flex.compiler.ast.concrete;
 
 import com.flex.compiler.ast.Expression;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 
-public class OperationExpression implements Expression {
+public class OperationExpression extends Expression {
     private final Expression expression;
 
-    protected OperationExpression(Expression expression) {
+    protected OperationExpression(Token token, Expression expression) {
+        super(token);
         this.expression = expression;
     }
 

@@ -6,6 +6,7 @@ import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
 import com.flex.compiler.lexicalAnalyzer.LexerUtils;
 import com.flex.compiler.lexicalAnalyzer.Operator;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.parser.exception.ParsingException;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
@@ -17,28 +18,22 @@ public class BinaryOperation extends ValueExpression {
     private ValueExpression right;
     private Operator operator;
 
-    public BinaryOperation(String operator, ValueExpression left, ValueExpression right) {
+    public BinaryOperation(Token token, String operator, ValueExpression left, ValueExpression right) {
+        super(token);
         this.operator = LexerUtils.getOperator(operator);
         this.left = left;
         this.right = right;
     }
 
-    public BinaryOperation(Operator operator, ValueExpression left, ValueExpression right) {
+    public BinaryOperation(Token token, Operator operator, ValueExpression left, ValueExpression right) {
+        super(token);
         this.operator = operator;
         this.left = left;
         this.right = right;
     }
 
-    public Operator getOperator() {
-        return operator;
-    }
-
     public ValueExpression getLeft() {
         return left;
-    }
-
-    public ValueExpression getRight() {
-        return right;
     }
 
     @Override
@@ -46,10 +41,10 @@ public class BinaryOperation extends ValueExpression {
         left.validate(context);
         right.validate(context);
             if(!ContextAnalyzerUtils.assertTypes(left.getValidType(), right.getValidType()))
-                throw new ContextException(ContextError.InvalidRightValue);
+                throw new ContextException(this.token, ContextError.InvalidRightValue);
 
         if (operator == Operator.Assignment && !left.canAssign())
-            throw new ContextException(ContextError.InvalidLeftValue);
+            throw new ContextException(this.token, ContextError.InvalidLeftValue);
     }
 
     @Override

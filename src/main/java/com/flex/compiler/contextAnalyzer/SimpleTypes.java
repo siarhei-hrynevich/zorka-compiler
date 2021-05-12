@@ -71,8 +71,8 @@ public class SimpleTypes {
         if (!isSimpleType(operandType.getName()))
             throw new ContextException(ContextError.InvalidValueType);
         return switch (operator) {
-            case Div, Mul, Plus, Minus, Assignment -> operandType;
-            case Less, Equal, More -> getBoolType();
+            case Div, Mul, Plus, Minus, Assignment, PlusAssignment, MinusAssignment, MulAssignment, DivAssignment -> operandType;
+            case Less, Equal, More, NotEqual -> getBoolType();
             default -> throw new ContextException(ContextError.InvalidValueType);
         };
     }

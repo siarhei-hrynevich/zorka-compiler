@@ -55,11 +55,11 @@ public class TranslatorContext {
         return table.findFunctions(name);
     }
 
-    public Variable findVar(String name) {
-        return Optional.ofNullable(current.findVariable(name))
-                .orElse(table.findVariable(name)
-                        .orElseThrow(() -> new ContextException(ContextError.SymbolNotDeclared)));
-    }
+//    public Variable findVar(String name) {
+//        return Optional.ofNullable(current.findVariable(name))
+//                .orElse(table.findVariable(name)
+//                        .orElseThrow(() -> new ContextException(ContextError.SymbolNotDeclared)));
+//    }
 
 }
 

@@ -7,15 +7,17 @@ import com.flex.compiler.contextAnalyzer.ContextAnalyzerUtils;
 import com.flex.compiler.contextAnalyzer.SimpleTypes;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 
-public class WhileExpression implements Expression {
+public class WhileExpression extends Expression {
 
     private BlockExpression body;
     private ValueExpression predicate;
 
-    public WhileExpression(BlockExpression body, ValueExpression predicate) {
+    public WhileExpression(Token token, BlockExpression body, ValueExpression predicate) {
+        super(token);
         this.body = body;
         this.predicate = predicate;
     }
@@ -24,7 +26,7 @@ public class WhileExpression implements Expression {
     public void validate(TranslatorContext context) {
         predicate.validate(context);
         if (!ContextAnalyzerUtils.assertTypes(predicate.getValidType(), SimpleTypes.getBoolType()))
-            throw new ContextException(ContextError.InvalidValueType);
+            throw new ContextException(this.token, ContextError.InvalidValueType, SimpleTypes.getBoolType());
         body.validate(context);
     }
 

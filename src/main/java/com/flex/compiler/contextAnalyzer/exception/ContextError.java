@@ -15,5 +15,6 @@ public enum ContextError {
     InvalidValueType,
     ExpectedReturn,
     UndeclaredType,
-    FieldIsNotExist
+    FieldIsNotExist,
+    FileNotFound
 }

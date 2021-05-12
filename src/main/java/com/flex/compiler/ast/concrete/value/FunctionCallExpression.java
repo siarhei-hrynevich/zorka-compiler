@@ -3,6 +3,7 @@ package com.flex.compiler.ast.concrete.value;
 import com.flex.compiler.ast.concrete.SymbolExpression;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.parser.Symbol;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
@@ -18,8 +19,8 @@ public class FunctionCallExpression extends SymbolExpression {
     private List<ValueExpression> args;
     private Function function;
 
-    public FunctionCallExpression(Symbol symbol, List<ValueExpression> args) {
-        super(symbol);
+    public FunctionCallExpression(Token token, Symbol symbol, List<ValueExpression> args) {
+        super(token, symbol);
         this.args = args;
     }
 
@@ -46,7 +47,7 @@ public class FunctionCallExpression extends SymbolExpression {
         Optional<Function> function = functions
                 .stream()
                 .filter(e -> isValidArgs(e, argTypes)).findFirst();
-        setFunction(function.orElseThrow(() -> new ContextException(ContextError.InvalidArgs)));
+        setFunction(function.orElseThrow(() -> new ContextException(this.token, ContextError.InvalidArgs, getName())));
     }
 
     @Override

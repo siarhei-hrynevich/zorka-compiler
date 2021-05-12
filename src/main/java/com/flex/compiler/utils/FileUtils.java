@@ -1,6 +1,6 @@
 package com.flex.compiler.utils;
 
-import java.io.File;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -72,5 +72,24 @@ public class FileUtils {
         File file = new File(dir);
         if (!file.isDirectory())
             file.mkdir();
+    }
+
+    public static boolean copyFile(String source, String destination) {
+        try (
+                InputStream in = new BufferedInputStream(
+                        new FileInputStream(source));
+                OutputStream out = new BufferedOutputStream(
+                        new FileOutputStream(destination))) {
+
+            byte[] buffer = new byte[1024];
+            int lengthRead;
+            while ((lengthRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, lengthRead);
+                out.flush();
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 }

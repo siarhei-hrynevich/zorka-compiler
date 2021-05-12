@@ -2,6 +2,7 @@ package com.flex.compiler.parser.parsers.keywords;
 
 import com.flex.compiler.ast.concrete.value.ArrayInstance;
 import com.flex.compiler.ast.concrete.value.ValueExpression;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.lexicalAnalyzer.TokenSequence;
 import com.flex.compiler.lexicalAnalyzer.TokenType;
 import com.flex.compiler.parser.ParserUtil;
@@ -20,14 +21,21 @@ public class ArrayInstantiationParser implements KeywordValueParser {
 
     @Override
     public ArrayInstance tryParse(TokenSequence tokens) throws Exception {
+        Token token = tokens.getCurrent();
         if (!tokens.next().value.equals("<"))
             throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
 
         if (!ParserUtil.isType(tokens.next()))
             throw new ParsingException(tokens.getCurrent(), Error.NeedTypeName);
         String type = tokens.getCurrent().value;
+        int arrayDimensionCount = 0;
+        while (tokens.next().type == TokenType.OpenSquareBracket) {
+            if (tokens.next().type != TokenType.CloseSquareBracket)
+                throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
+            arrayDimensionCount++;
+        }
 
-        if (!tokens.next().value.equals(">"))
+        if (!tokens.getCurrent().value.equals(">"))
             throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
 
         if (tokens.next().type != TokenType.OpenBracket)
@@ -38,6 +46,6 @@ public class ArrayInstantiationParser implements KeywordValueParser {
         if (tokens.getCurrent().type != TokenType.CloseBracket)
             throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
         tokens.next();
-        return new ArrayInstance(size, type);
+        return new ArrayInstance(token, size, type, arrayDimensionCount);
     }
 }

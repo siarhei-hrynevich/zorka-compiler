@@ -7,16 +7,18 @@ import com.flex.compiler.contextAnalyzer.ContextAnalyzerUtils;
 import com.flex.compiler.contextAnalyzer.SimpleTypes;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 
-public class IfExpression implements Expression {
+public class IfExpression extends Expression {
 
     private ValueExpression predicate;
     private BlockExpression thenBody;
     private BlockExpression elseBody;
 
-    public IfExpression(ValueExpression predicate, BlockExpression thenBody, BlockExpression elseBody) {
+    public IfExpression(Token token, ValueExpression predicate, BlockExpression thenBody, BlockExpression elseBody) {
+        super(token);
         this.predicate = predicate;
         this.thenBody = thenBody;
         this.elseBody = elseBody;
@@ -26,7 +28,7 @@ public class IfExpression implements Expression {
     public void validate(TranslatorContext context) {
         predicate.validate(context);
         if (!ContextAnalyzerUtils.assertTypes(predicate.getValidType(), SimpleTypes.getBoolType()))
-            throw new ContextException(ContextError.InvalidValueType);
+            throw new ContextException(this.token, ContextError.InvalidValueType, SimpleTypes.getBoolType());
         thenBody.validate(context);
         if (elseBody != null)
             elseBody.validate(context);

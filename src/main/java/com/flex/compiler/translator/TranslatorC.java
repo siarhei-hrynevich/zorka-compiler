@@ -80,7 +80,11 @@ public class TranslatorC implements Translator {
     @Override
     public void pushArrayInstantiation(Type arrayType) {
         String arraySize = popValue();
-        values.add(String.format("create_array(%s, %s)", arraySize, arrayType.getSize()));
+        values.add(String.format("create_array(%s, sizeof(%s))",
+                arraySize,
+                (arrayType.isSimple() ? "" : "struct ")
+                        + TranslatorCUtils.getTypeName(arrayType)
+                        + "*".repeat(Math.max(0, arrayType.getArrayDimension() - 1))));
     }
 
     @Override
@@ -272,6 +276,13 @@ public class TranslatorC implements Translator {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void delete() {
+        String value = popValue();
+        addPaddings(body);
+        body.append(String.format("delete_array(%s)", value));
     }
 
     private String popValue() {

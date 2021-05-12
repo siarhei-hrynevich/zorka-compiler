@@ -22,7 +22,8 @@ public class SymbolsStorage {
     }
 
     private static SymbolsTable loadTable(List<String> location) throws Exception {
-        Compiler.loadFile(location);
+        if (Compiler.loadFile(location) == null)
+            throw new Exception();
         return tables.stream()
                 .filter(t -> t.getLocation().equals(location))
                 .findFirst().get();

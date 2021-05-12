@@ -35,16 +35,17 @@ public class ValueExpressionParser implements ExpressionParser {
     }
 
     private FunctionCallExpression parseFunctionCall(TokenSequence tokens, Symbol symbol) throws Exception {
+        Token token = tokens.getCurrent();
         List<ValueExpression> args = parseArgs(tokens);
-        return new FunctionCallExpression(symbol, args);
+        return new FunctionCallExpression(token, symbol, args);
     }
 
     private VariableExpression parseVariable(TokenSequence tokens, Symbol symbol) {
-        return new VariableExpression(symbol);
+        return new VariableExpression(tokens.getCurrent(), symbol);
     }
 
     private ConstExpression createConst(Token token) {
-        ConstExpression expression = new ConstExpression(token.value);
+        ConstExpression expression = new ConstExpression(token);
         if (expression.getValue().startsWith("\"")) {
             expression.setString(true);
             return expression;
@@ -75,18 +76,20 @@ public class ValueExpressionParser implements ExpressionParser {
     }
 
     private IndexerExpression parseIndexer(TokenSequence tokens, ValueExpression pointer) throws Exception {
+        Token token = tokens.getCurrent();
         tokens.next();
         ValueExpression index = tryParse(tokens);
         if (tokens.getCurrent().type != TokenType.CloseSquareBracket)
             throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
-        return new IndexerExpression(pointer, index);
+        return new IndexerExpression(token, pointer, index);
     }
 
     private StructFieldExpression parseField(TokenSequence tokens, ValueExpression struct) {
+        Token token = tokens.getCurrent();
         tokens.next();
         if (tokens.getCurrent().type != TokenType.Identifier)
             throw new ParsingException(tokens.getCurrent(), Error.NeedIdentifier);
-        return new StructFieldExpression(tokens.getCurrent().value, struct);
+        return new StructFieldExpression(token, tokens.getCurrent().value, struct);
     }
 
     ValueExpression parseKeywordOrSymbol(TokenSequence tokens) throws Exception {
@@ -175,7 +178,7 @@ public class ValueExpressionParser implements ExpressionParser {
         Token last = operators.pop();
         ValueExpression right = values.pop();
         ValueExpression left = values.pop();
-        BinaryOperation result = new BinaryOperation(last.value, left, right);
+        BinaryOperation result = new BinaryOperation(last, last.value, left, right);
         values.push(result);
     }
 

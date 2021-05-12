@@ -4,6 +4,7 @@ import com.flex.compiler.ast.Expression;
 import com.flex.compiler.ast.concrete.BlockExpression;
 import com.flex.compiler.ast.concrete.keywords.IfExpression;
 import com.flex.compiler.ast.concrete.value.ValueExpression;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.lexicalAnalyzer.TokenSequence;
 import com.flex.compiler.lexicalAnalyzer.TokenType;
 import com.flex.compiler.parser.exception.Error;
@@ -19,6 +20,7 @@ public class IfParser implements ExpressionParser {
 
     @Override
     public Expression tryParse(TokenSequence tokens) throws Exception {
+        Token token = tokens.getCurrent();
         if(tokens.next().type != TokenType.OpenBracket)
             throw new ParsingException(tokens.getCurrent(), Error.UnexpectedToken);
         tokens.next();
@@ -31,6 +33,6 @@ public class IfParser implements ExpressionParser {
         BlockExpression elseBody = null;
         if (tokens.getCurrent().type == TokenType.Keyword && tokens.getCurrent().value.equals("else"))
             elseBody = blockParser.tryParse(tokens);
-        return new IfExpression(predicate, thenBody, elseBody);
+        return new IfExpression(token, predicate, thenBody, elseBody);
     }
 }

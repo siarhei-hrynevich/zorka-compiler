@@ -11,6 +11,7 @@ public enum Operator {
     Less,
     More,
     Equal,
+    NotEqual,
     Div,
     Mul
 }

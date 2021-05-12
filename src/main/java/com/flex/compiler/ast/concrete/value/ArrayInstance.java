@@ -2,6 +2,7 @@ package com.flex.compiler.ast.concrete.value;
 
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
@@ -9,12 +10,15 @@ import com.flex.compiler.translator.symbols.Type;
 public class ArrayInstance extends ValueExpression {
     private final ValueExpression size;
     private final String typeName;
+    private final int typeArrayDimension;
 
     private Type type;
 
-    public ArrayInstance(ValueExpression size, String type) {
+    public ArrayInstance(Token token, ValueExpression size, String type, int typeArrayDimension) {
+        super(token);
         this.size = size;
         this.typeName = type;
+        this.typeArrayDimension = typeArrayDimension;
     }
 
     @Override
@@ -23,8 +27,8 @@ public class ArrayInstance extends ValueExpression {
 
         type = new Type(context.getTable()
                 .findType(typeName)
-                .orElseThrow(() -> new ContextException(ContextError.UndeclaredType)));
-        type.incrementDimension();
+                .orElseThrow(() -> new ContextException(this.token, ContextError.UndeclaredType)));
+        type.setArrayDimension(typeArrayDimension + 1);
     }
 
     @Override

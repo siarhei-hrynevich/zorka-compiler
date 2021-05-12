@@ -3,6 +3,7 @@ package com.flex.compiler.ast.concrete.value;
 import com.flex.compiler.ast.concrete.SymbolExpression;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.parser.Symbol;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
@@ -15,8 +16,8 @@ public class VariableExpression extends SymbolExpression {
 
     Variable variable;
 
-    public VariableExpression(Symbol symbol) {
-        super(symbol);
+    public VariableExpression(Token token, Symbol symbol) {
+        super(token, symbol);
     }
 
     public Variable getVariable() {
@@ -34,7 +35,7 @@ public class VariableExpression extends SymbolExpression {
         if (var == null)
             var = context.getTable()
                     .findVariable(getName())
-                    .orElseThrow(() -> new ContextException(ContextError.SymbolNotExistInPackage));
+                    .orElseThrow(() -> new ContextException(this.token, ContextError.SymbolNotExistInPackage));
         this.variable = var;
     }
 
@@ -50,6 +51,6 @@ public class VariableExpression extends SymbolExpression {
 
     @Override
     public boolean canAssign() {
-        return true;
+        return !variable.isConst();
     }
 }

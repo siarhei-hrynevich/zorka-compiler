@@ -15,6 +15,7 @@ public class BlockParser implements ExpressionParser {
 
     @Override
     public BlockExpression tryParse(TokenSequence tokens) throws Exception {
+        Token token = tokens.getCurrent();
         List<Expression> expressions = new ArrayList<>();
         if (tokens.getCurrent().type != TokenType.BeginBlock) {
             expressions.add(parser.tryParse(tokens));
@@ -25,7 +26,7 @@ public class BlockParser implements ExpressionParser {
                 tokens.next();
         }
 
-        return new BlockExpression(expressions);
+        return new BlockExpression(token, expressions);
     }
 
     private List<Expression> parseBlock(TokenSequence tokens) throws Exception {

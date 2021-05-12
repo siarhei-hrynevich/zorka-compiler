@@ -1,5 +1,6 @@
 package com.flex.compiler.ast.concrete;
 
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Function;
@@ -17,7 +18,8 @@ public class FunctionDeclarationExpression extends DeclarationExpression {
     private Function function;
 
 
-    public FunctionDeclarationExpression(String typeName, String name, List<VariableDeclarationExpression> args) {
+    public FunctionDeclarationExpression(Token token, String typeName, String name, List<VariableDeclarationExpression> args) {
+        super(token);
         this.typeName = typeName;
         this.name = name;
         this.args = args;

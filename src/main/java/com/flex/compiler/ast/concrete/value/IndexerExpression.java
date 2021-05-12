@@ -4,6 +4,7 @@ import com.flex.compiler.contextAnalyzer.ContextAnalyzerUtils;
 import com.flex.compiler.contextAnalyzer.SimpleTypes;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
@@ -15,7 +16,8 @@ public class IndexerExpression extends ValueExpression {
 
     private Type type;
 
-    public IndexerExpression(ValueExpression pointer, ValueExpression index) {
+    public IndexerExpression(Token token, ValueExpression pointer, ValueExpression index) {
+        super(token);
         this.pointer = pointer;
         this.index = index;
     }
@@ -25,12 +27,16 @@ public class IndexerExpression extends ValueExpression {
         pointer.validate(context);
         index.validate(context);
         if (!ContextAnalyzerUtils.assertTypes(SimpleTypes.getInt32Type(), index.getValidType()))
-            throw new ContextException(ContextError.InvalidValueType);
+            throw new ContextException(this.token, ContextError.InvalidValueType);
         if (pointer.getValidType().getArrayDimension() == 0)
-            throw new ContextException(ContextError.InvalidValueType);
+            throw new ContextException(this.token, ContextError.InvalidValueType);
 
         type = new Type(pointer.getValidType());
-        type.decrementDimension();
+        try {
+            type.decrementDimension();
+        } catch (Exception e) {
+            throw new ContextException(this.token, ContextError.InvalidValueType);
+        }
     }
 
     @Override

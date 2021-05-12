@@ -1,5 +1,8 @@
 package com.flex.compiler.ast.concrete.value;
 
+import com.flex.compiler.contextAnalyzer.exception.ContextError;
+import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
@@ -15,7 +18,8 @@ public class StructFieldExpression extends ValueExpression {
     private Type structType;
     private boolean isConst;
 
-    public StructFieldExpression(String fieldName, ValueExpression struct) {
+    public StructFieldExpression(Token token, String fieldName, ValueExpression struct) {
+        super(token);
         this.fieldName = fieldName;
         this.struct = struct;
     }
@@ -26,6 +30,8 @@ public class StructFieldExpression extends ValueExpression {
 
         structType = struct.getValidType();
         Variable variable = structType.findField(fieldName);
+        if (variable == null)
+            throw new ContextException(this.token, ContextError.FieldIsNotExist);
         fieldType = variable.getType();
         isConst = variable.isConst();
     }

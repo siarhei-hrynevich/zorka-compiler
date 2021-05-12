@@ -4,13 +4,14 @@ import com.flex.compiler.ast.Expression;
 import com.flex.compiler.ast.concrete.keywords.ReturnExpression;
 import com.flex.compiler.contextAnalyzer.exception.ContextError;
 import com.flex.compiler.contextAnalyzer.exception.ContextException;
+import com.flex.compiler.lexicalAnalyzer.Token;
 import com.flex.compiler.translator.Translator;
 import com.flex.compiler.translator.TranslatorContext;
 import com.flex.compiler.translator.symbols.Type;
 
 import java.util.List;
 
-public class BlockExpression implements Expression {
+public class BlockExpression extends Expression {
 
     private final List<Expression> expressions;
     private Type returnType;
@@ -19,7 +20,8 @@ public class BlockExpression implements Expression {
         return expressions;
     }
 
-    public BlockExpression(List<Expression> expressions) {
+    public BlockExpression(Token token, List<Expression> expressions) {
+        super(token);
         this.expressions = expressions;
     }
 

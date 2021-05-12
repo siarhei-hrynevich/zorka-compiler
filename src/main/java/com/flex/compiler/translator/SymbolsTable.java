@@ -24,14 +24,14 @@ public class SymbolsTable {
 
     public void add(Symbol symbol) throws ContextException {
         if(symbols.contains(symbol) || importedSymbols.contains(symbol))
-            throw new ContextException(ContextError.SymbolExistInPackage);
+            throw new ContextException(ContextError.SymbolExistInPackage, symbol);
         symbols.add(symbol);
     }
 
     public void addImport(List<Symbol> imports, String path) throws ContextException {
         for (Symbol symbol : imports) {
             if (symbols.contains(symbol))
-                throw new ContextException(ContextError.SymbolExistInPackage);
+                throw new ContextException(ContextError.SymbolExistInPackage, symbol);
         }
         imports.forEach((symbol -> symbol.setLocation(path)));
         importedSymbols.addAll(imports);

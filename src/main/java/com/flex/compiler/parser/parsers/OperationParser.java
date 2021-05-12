@@ -20,8 +20,8 @@ public class OperationParser implements ExpressionParser {
     @Override
     public Expression tryParse(TokenSequence tokens) throws Exception {
         if (tokens.getCurrent().type == TokenType.Keyword) {
+            List<String> modifiers = ParserUtil.parseModifiers(tokens);
             if (ParserUtil.isType(tokens.getCurrent())) {
-                List<String> modifiers = ParserUtil.parseModifiers(tokens);
                 DeclarationExpression expression = declarationParser.tryParse(tokens);
                 expression.setModifiers(modifiers);
                 return expression;
